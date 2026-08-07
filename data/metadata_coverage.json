@@ -1,0 +1,66 @@
+{
+  "column_count": 52,
+  "counts": {
+    "area_source": {
+      "Wikidata P2046 area": 3,
+      "fallback_placeholder": 18,
+      "mledoze/countries area": 250
+    },
+    "co2_source": {
+      "": 56,
+      "Our World in Data CO2 dataset": 215
+    },
+    "gdp_source": {
+      "": 61,
+      "World Bank WDI NY.GDP.MKTP.CD": 210
+    },
+    "metadata_quality": {
+      "bulk_enriched": 226,
+      "partial_enriched": 24,
+      "placeholder": 21
+    },
+    "population_source": {
+      "Our World in Data CO2 population": 10,
+      "World Bank WDI SP.POP.TOTL": 216,
+      "fallback_placeholder": 45
+    },
+    "recognition_year_confidence": {
+      "low": 44,
+      "medium": 191,
+      "none": 33,
+      "worked_example": 3
+    }
+  },
+  "placeholder_codes": [
+    "arab",
+    "asean",
+    "cefta",
+    "cp",
+    "dg",
+    "eac",
+    "es-ct",
+    "es-ga",
+    "es-pv",
+    "eu",
+    "gb-eng",
+    "gb-nir",
+    "gb-sct",
+    "gb-wls",
+    "ic",
+    "pc",
+    "sh-ac",
+    "sh-hl",
+    "sh-ta",
+    "un",
+    "xx"
+  ],
+  "row_count": 271,
+  "source_urls": {
+    "countries.json": "https://raw.githubusercontent.com/mledoze/countries/master/countries.json",
+    "owid-co2-data.csv": "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv",
+    "wikidata_iso2.json": "https://query.wikidata.org/sparql",
+    "worldbank_countries.json": "https://api.worldbank.org/v2/country?format=json&per_page=400",
+    "worldbank_gdp.json": "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json&per_page=20000&mrv=5",
+    "worldbank_population.json": "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&per_page=20000&mrv=5"
+  }
+}
