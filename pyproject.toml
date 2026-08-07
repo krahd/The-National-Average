@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "the-national-average"
 version = "2.1.0"
-description = "Representation-ladder prototype for critical averaging of national symbols."
+description = "Research project and artwork on critical averaging, statistical representation, and national symbols."
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
