@@ -20,13 +20,13 @@ The implementation records these operations in machine-readable provenance trace
 
 ## Publication
 
-The research is developed in:
+The project is discussed in:
 
-> Tomas Laurenzo. **“Critical Averaging and the Politics of Statistical Representation.”** To appear in *Advances in Artificial Intelligence – IBERAMIA 2026*, Springer Lecture Notes in Artificial Intelligence (LNAI), 2026.
+> Tomas Laurenzo. **“Critical Averaging and the Politics of Statistical Representation.”** To appear in the proceedings of IBERAMIA 2026, *Advances in Artificial Intelligence*, Springer Lecture Notes in Artificial Intelligence (LNAI), 2026.
 
 IBERAMIA 2026: https://www.iberamia.org/iberamia/iberamia2026/
 
-The paper develops the conceptual and methodological argument; this repository contains the ongoing research and artistic system itself: code, data, representation backends, experiments, provenance mechanisms, and audiovisual production tools.
+The paper articulates the method and its critical argument; this repository is the working research and artistic system: code, data, representation backends, experiments, provenance mechanisms, and audiovisual production tools.
 
 ## The representation ladder
 
