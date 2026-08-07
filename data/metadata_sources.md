@@ -1,10 +1,10 @@
-# Metadata Sources and Provenance
+# Metadata sources and provenance
 
-`data/metadata.csv` is the metadata table used by the flag corpus. It was
-rebuilt from bulk public sources in June 2026 so the project can use weighting
-criteria beyond the original worked example.
+The metadata is one of the materials of **The National Average**. Weighting the same set of flags by population, area, GDP, emissions, energy use, or historical variables produces different averages; the provenance and limitations of those quantities are therefore part of the research rather than incidental implementation detail.
 
-## Rebuild Inputs
+`data/metadata.csv` contains the country- and territory-level metadata used for description and weighting. It was assembled from public sources in June 2026 and is accompanied by field-level source information and coverage metadata.
+
+## Rebuilding the metadata
 
 The builder reads source snapshots from `/tmp/tna_metadata`:
 
@@ -32,7 +32,7 @@ The script writes:
 - `data/metadata.csv`
 - `data/metadata_coverage.json`
 
-## Source Roles
+## Sources and their roles
 
 | Source | Columns populated |
 |---|---|
@@ -44,39 +44,22 @@ The script writes:
 | Our World in Data CO2 dataset | current annual CO2, cumulative CO2, greenhouse-gas, energy, and fallback population/GDP fields |
 | Wikidata SPARQL | `inception_year`, `un_membership_year`, fallback `area_km2` where missing |
 
-## Licensing
+## Recognition-year field
 
-The project MIT license does not relicense this database. The combined metadata
-incorporates `mledoze/countries`, whose database is licensed under ODbL 1.0;
-`data/metadata.csv` is therefore distributed subject to ODbL 1.0 to the extent
-that license applies to the derived database. Incorporated fields also retain
-source-specific attribution and terms, including World Bank WDI dataset terms,
-Our World in Data and underlying-provider terms, Wikidata CC0, and the
-applicable UN DESA terms.
+`recognition_year` is retained for compatibility, but it is not a uniform independence-date variable. Depending on the entry, the available historical marker may refer to UN membership, inception, or a hand-checked project value.
 
-See the repository-level `LICENSE-data.md` for the distribution notice and
-source-license links.
+The builder resolves it as follows:
 
-## Recognition Year Caveat
-
-The old CSV already had a `recognition_year` column, so it is retained for code
-compatibility. It is not a uniform independence-date field.
-
-The builder fills it as follows:
-
-1. Keep the previous hand-vetted worked-example values for `fr`, `uy`, and `ps`.
+1. Keep the hand-checked values used by the France–Uruguay–Palestine example.
 2. Use Wikidata UN membership start year (`member of` United Nations with `start time`) when present.
 3. Use Wikidata `inception` year for non-UN members and territories when present.
 4. Fall back to `1900` only when no sourced date exists.
 
-Use `recognition_year_source` and `recognition_year_confidence` before treating
-this as an analytical variable. The CLI rejects `recognition_year` weighting for
-rows whose source is only `fallback_placeholder`.
+`recognition_year_source` and `recognition_year_confidence` should always be read with the value itself. The CLI rejects `recognition_year` weighting for rows whose source is only `fallback_placeholder`.
 
 ## Coverage
 
-The current generated coverage is recorded in `data/metadata_coverage.json`.
-At generation time:
+The current generated coverage is recorded in `data/metadata_coverage.json`:
 
 - rows: 271
 - columns: 52
@@ -84,9 +67,15 @@ At generation time:
 - `partial_enriched`: 24 rows
 - `placeholder`: 21 rows
 
-The placeholder rows are supranational, subnational, or special flag codes
-already excluded from the default nation corpus, such as `eu`, `un`, `arab`,
-`asean`, `gb-eng`, and the Spanish autonomous-community flags.
+The placeholder rows are supranational, subnational, or special flag codes already excluded from the default analytical corpus, including `eu`, `un`, `arab`, `asean`, `gb-eng`, and the Spanish autonomous-community flags.
+
+`metadata_quality` is a row-level coverage indicator rather than a guarantee that every field in the row is sourced:
+
+- `bulk_enriched`: population and area are sourced and the row matched a country or territory record.
+- `partial_enriched`: at least one source matched, but one of the core fields is missing or placeholder.
+- `placeholder`: no reliable bulk source matched the local flag code.
+
+For field-level decisions, use the corresponding `*_source`, `*_year`, and confidence columns.
 
 ## Units
 
@@ -105,16 +94,8 @@ already excluded from the default nation corpus, such as `eu`, `un`, `arab`,
 | `share_global_co2_pct` | percent share |
 | `temperature_change_from_co2_c` | degrees Celsius contribution |
 
-## Quality Flags
+## Licensing
 
-`metadata_quality` is a row-level coverage flag, not a guarantee that every
-single column is sourced.
+The project MIT licence does not relicense this database. The combined metadata incorporates `mledoze/countries`, whose database is licensed under ODbL 1.0; `data/metadata.csv` is therefore distributed subject to ODbL 1.0 to the extent that licence applies to the derived database. Incorporated fields also retain source-specific attribution and terms, including World Bank WDI dataset terms, Our World in Data and underlying-provider terms, Wikidata CC0, and the applicable UN DESA terms.
 
-- `bulk_enriched`: population and area are sourced and the row matched a country
-  or territory record.
-- `partial_enriched`: at least one source matched, but one of the core fields is
-  missing or placeholder.
-- `placeholder`: no reliable bulk source matched the local flag code.
-
-For field-level decisions, use the `*_source`, `*_year`, and
-`recognition_year_confidence` columns.
+See `../LICENSE-data.md` for the distribution notice and source-licence links.
