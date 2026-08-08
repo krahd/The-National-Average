@@ -1,4 +1,4 @@
-"""Shared PIL compositing helpers and ffmpeg streaming for the video video.
+"""Shared PIL compositing helpers and ffmpeg streaming for the video.
 
 These are presentation utilities only. They never invent measurements: classical
 operations such as :func:`sobel_edges` and :func:`colour_masks` are genuine image

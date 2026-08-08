@@ -1,4 +1,4 @@
-"""Foundation-model asset preparation for the video video renderer."""
+"""Foundation-model asset preparation for the video renderer."""
 
 from __future__ import annotations
 

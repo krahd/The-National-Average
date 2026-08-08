@@ -143,7 +143,7 @@ def phase_segments(duration: float) -> list[tuple[str, float, float]]:
 
 @dataclass(frozen=True)
 class VideoRenderConfig:
-    """Production settings for one video video render."""
+    """Production settings for one video render."""
 
     out_dir: Path = OUTPUT_ROOT
     width: int = 960
@@ -586,7 +586,7 @@ def write_render_notes(config: VideoRenderConfig, assets: RenderAssets, output_p
             [
                 f"# {TITLE} — Technical Statement",
                 "",
-                "Single-channel video, 2026. Silent in this build (audio deferred).",
+                f"Single-channel video, 2026. {'Data-driven audio enabled.' if config.audio else 'Silent render.'}",
                 "",
                 "Generated from a local corpus of national / quasi-national flag SVGs "
                 f"({len(assets.codes)} polities with sourced metadata for all five weightings). "
