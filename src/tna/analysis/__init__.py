@@ -1,4 +1,4 @@
-"""Real machine-vision analysis layer for *The Average Nation*.
+"""Real machine-vision analysis layer for *The National Average*.
 
 Every function here computes a value from the flag corpus or the loaded models
 and returns a typed, JSON-serialisable record. The video renderer consumes these

@@ -139,6 +139,14 @@ The earlier entry point remains available:
 python src/critical_averaging.py --backends pixel,palette,pca
 ```
 
+
+Render the moving-image work from its versioned preset:
+
+```bash
+python scripts/render_video.py --preset preview
+python scripts/render_video.py --preset production
+```
+
 ## Outputs and provenance
 
 Generated material is written under `outputs/` by default:
@@ -170,6 +178,8 @@ The metadata and flag assets retain their source licences; see `LICENSE-data.md`
 
 ## Audiovisual work
 
+**Status: active, work in progress (August 2026).** The moving-image work is an ongoing manifestation of The National Average and is being developed independently of any particular venue. Its renderer and versioned presets are canonical artwork source, not disposable production infrastructure. See [`docs/video.md`](docs/video.md) for reproduction and preservation details.
+
 The repository also contains the audiovisual system used to develop moving-image manifestations of the project. These modules transform the same corpus, weighting operations, learned representations, and analysis records into video and sound.
 
 The video pipeline follows a strict invariant: analytical quantities shown on screen originate in computed records. Values, rankings, residuals, saliency measurements, and embedding relations are not invented for visual effect.
@@ -186,9 +196,11 @@ The video pipeline follows a strict invariant: analytical quantities shown on sc
 | `src/tna/video/scenes.py` | scene rendering from analysis records |
 | `src/tna/video/compositor.py` | frame composition and ffmpeg integration |
 | `src/tna/video/audio.py` | data-driven audio rendering |
-| `scripts/prepare_eccv_assets.py` | foundation-model asset preparation |
-| `scripts/render_eccv_video.py` | video rendering entry point |
+| `scripts/prepare_video_assets.py` | foundation-model asset preparation |
+| `scripts/render_video.py` | video rendering entry point |
 | `scripts/verify_analysis.py` | independent checks of analysis records and invariants |
+| `presets/video-2026.json` | preserved preview and production render settings |
+| `docs/video.md` | moving-image status, reproduction, provenance, and preservation policy |
 
 A secondary symbolic-music pipeline applies the same logic to hand-authored anthem-like profiles, including tempo, pitch, mode, metre, motifs, and durations.
 
@@ -204,7 +216,10 @@ A secondary symbolic-music pipeline applies the same logic to hand-authored anth
 | `src/tna/backends/` | representation-space implementations and registry |
 | `src/tna/music/` | symbolic music system and optional scaffold |
 | `src/tna/analysis/` | machine-vision analysis records |
-| `src/tna/video/` | audiovisual production pipeline |
+| `src/tna/video/` | moving-image source: orchestration, scenes, composition, effects, and sound |
+| `scripts/render_video.py` | canonical moving-image rendering entry point |
+| `presets/video-2026.json` | versioned moving-image render settings |
+| `docs/video.md` | moving-image documentation and preservation policy |
 | `scripts/build_metadata.py` | metadata rebuild from source snapshots |
 | `src/critical_averaging.py` | backwards-compatible CLI wrapper |
 | `src/tests/` | smoke and provenance/fabrication regression tests |

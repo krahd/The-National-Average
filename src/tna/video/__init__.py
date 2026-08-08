@@ -1,11 +1,10 @@
-"""Video production helpers for exhibition outputs.
+"""Moving-image production for The National Average.
 
-Implementation lives in `pipeline` (orchestration + real analysis), `scenes`
-(frame compositor), and `compositor` (shared helpers + ffmpeg). `eccv` remains as
-a backwards-compatible re-export.
+``pipeline`` generates analysis-derived assets and provenance, ``scenes``
+renders frames, and ``compositor`` performs final frame/audio composition.
 """
 
 from .foundation import prepare_foundation_assets
-from .pipeline import ECCVRenderConfig, render_eccv_video
+from .pipeline import VideoRenderConfig, render_video
 
-__all__ = ["ECCVRenderConfig", "prepare_foundation_assets", "render_eccv_video"]
+__all__ = ["VideoRenderConfig", "prepare_foundation_assets", "render_video"]

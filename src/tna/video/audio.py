@@ -1,4 +1,4 @@
-"""Dark-ambient synthesiser soundtrack for *The Average Nation*.
+"""Dark-ambient synthesiser soundtrack for *The National Average*.
 
 A thick, multi-band drone built in numpy: heavy sub-bass, detuned-unison supersaw
 pads (low + mid), a high noise shimmer, slow FFT-filtered movement, a reverb tail,
@@ -187,7 +187,7 @@ def render_soundtrack(assets, config) -> Path:
     right = np.tanh(right / peak * 1.4) * 0.72
     stereo = np.clip(np.stack([left, right], axis=1), -1.0, 1.0)
     pcm = (stereo * 32767).astype("<i2")
-    path = config.out_dir / "audio" / "the_average_nation.wav"
+    path = config.out_dir / "audio" / "the_national_average.wav"
     path.parent.mkdir(parents=True, exist_ok=True)
     with wave.open(str(path), "wb") as handle:
         handle.setnchannels(2)

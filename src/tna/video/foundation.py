@@ -1,4 +1,4 @@
-"""Foundation-model asset preparation for the ECCV video renderer."""
+"""Foundation-model asset preparation for the video video renderer."""
 
 from __future__ import annotations
 
@@ -87,7 +87,7 @@ def prepare_foundation_assets(
         from huggingface_hub import snapshot_download
     except Exception as exc:  # pragma: no cover - depends on optional deps
         raise FoundationAssetError(
-            "huggingface_hub is required to prepare ECCV foundation assets; "
+            "huggingface_hub is required to prepare video foundation assets; "
             "install the foundation optional dependencies."
         ) from exc
 

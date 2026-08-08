@@ -1,4 +1,4 @@
-"""Shared PIL compositing helpers and ffmpeg streaming for the ECCV video.
+"""Shared PIL compositing helpers and ffmpeg streaming for the video video.
 
 These are presentation utilities only. They never invent measurements: classical
 operations such as :func:`sobel_edges` and :func:`colour_masks` are genuine image
@@ -276,8 +276,8 @@ def render_video_stream(
     command += [
         "-c:v", "libx264",
         "-pix_fmt", "yuv420p",
-        "-preset", "medium" if config.preset == "submission" else "veryfast",
-        "-crf", "18" if config.preset == "submission" else "20",
+        "-preset", "medium" if config.preset == "production" else "veryfast",
+        "-crf", "18" if config.preset == "production" else "20",
     ]
     if audio_path is not None:
         command += ["-c:a", "aac", "-b:a", "192k", "-shortest"]

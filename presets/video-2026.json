@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "artwork": "The National Average",
+  "status": "work-in-progress",
+  "snapshot": "video-2026-v1",
+  "created": "2026-08-07",
+  "models": {
+    "clip": "openai/clip-vit-base-patch32",
+    "sdvae": "stabilityai/sd-vae-ft-mse",
+    "revision_policy": "Resolved model snapshot revisions are recorded in provenance/model_manifest.json at render time."
+  },
+  "preview": {
+    "width": 960,
+    "height": 540,
+    "fps": 12,
+    "duration": 180.0,
+    "foundation": "auto",
+    "seed": 20260613,
+    "audio": true,
+    "provenance_overlay": false
+  },
+  "production": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "duration": 180.0,
+    "foundation": "required",
+    "seed": 20260613,
+    "audio": true,
+    "provenance_overlay": false
+  }
+}

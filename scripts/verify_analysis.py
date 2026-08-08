@@ -16,7 +16,7 @@ from tna.analysis import (
 )
 from tna.backends.clip_retrieval import build_clip_backend
 from tna.data import DATA_DIR, corpus_arrays, load_corpus
-from tna.video.eccv import INTENTS, production_codes
+from tna.video.video import INTENTS, production_codes
 from tna.weights import weights_from_intent
 
 

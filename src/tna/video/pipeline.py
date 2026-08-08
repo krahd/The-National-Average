@@ -1,4 +1,4 @@
-"""Asset + real-analysis generation and orchestration for *The Average Nation*.
+"""Asset + real-analysis generation and orchestration for *The National Average*.
 
 This module loads the corpus, runs every representation backend, and — crucially
 — computes the real machine-vision analysis records (`tna.analysis.*`) that the
@@ -51,7 +51,7 @@ from ..weights import WeightingRun, weights_from_intent
 from .compositor import edge_density, render_video_stream
 from .foundation import prepare_foundation_assets
 
-TITLE = "The Average Nation"
+TITLE = "The National Average"
 INTENTS = ("equal", "population", "gdp", "co2", "cumulative_co2")
 INTENT_LABELS = {
     "equal": "one nation, one vote",
@@ -62,8 +62,8 @@ INTENT_LABELS = {
 }
 BASE_BACKENDS = ("pixel", "palette", "pca", "svg")
 FOUNDATION_BACKENDS = ("clip", "sdvae")
-OUTPUT_ROOT = ROOT_DIR / "outputs" / "eccv" / "the_average_nation"
-CORPUS_VERSION = "lipis-flag-icons-main-4x3+metadata-v2+eccv-video"
+OUTPUT_ROOT = ROOT_DIR / "outputs" / "video" / "the_national_average"
+CORPUS_VERSION = "lipis-flag-icons-main-4x3+metadata-v2+moving-image-v1"
 # Flags decomposed in scene 2; chosen for legible, varied heraldry.
 FOCUS_CODES = ("ps", "fr", "uy", "jp", "za", "br", "in", "tr")
 # Nations whose rank in the averaged-embedding retrieval the verdict reports.
@@ -72,7 +72,7 @@ PROBE_CODES = ("ps", "uy", "il", "tv")
 GALLERY_SIZE = 32
 
 # Ordered scene schedule (key, weight). Per-scene seconds scale with duration, so
-# the same schedule drives both preview and submission lengths.
+# the same schedule drives both preview and production lengths.
 SCENE_SCHEDULE = [
     ("cold_open", 1.0),
     ("archive", 2.0),
@@ -142,8 +142,8 @@ def phase_segments(duration: float) -> list[tuple[str, float, float]]:
 
 
 @dataclass(frozen=True)
-class ECCVRenderConfig:
-    """Production settings for one ECCV video render."""
+class VideoRenderConfig:
+    """Production settings for one video video render."""
 
     out_dir: Path = OUTPUT_ROOT
     width: int = 960
@@ -159,7 +159,7 @@ class ECCVRenderConfig:
 
     @property
     def canvas(self) -> tuple[int, int]:
-        if self.width >= 1280 or self.preset == "submission":
+        if self.width >= 1280 or self.preset == "production":
             return (192, 144)
         return (96, 72)
 
@@ -278,7 +278,7 @@ def build_video_backend(backend_name, arrays, config, model_manifest):
         arrays,
         seed=config.seed,
         palette_size=6,
-        pca_components=32 if config.preset == "submission" else 16,
+        pca_components=32 if config.preset == "production" else 16,
         svg_renderer="deterministic",
         train_vae=False,
         vae_epochs=0,
@@ -291,7 +291,7 @@ def _compute_analysis(
     corpus: dict[str, Polity],
     selected: list[Polity],
     weights: dict[str, WeightingRun],
-    config: ECCVRenderConfig,
+    config: VideoRenderConfig,
 ) -> tuple[
     EmbeddingGeometry | None,
     dict[str, ErasureRecord],
@@ -427,7 +427,7 @@ def _compute_analysis(
 
 
 def generate_assets(
-    config: ECCVRenderConfig,
+    config: VideoRenderConfig,
     *,
     required_foundation: bool,
     model_manifest: dict[str, Any] | None = None,
@@ -577,8 +577,8 @@ def _provenance_manifest(erasure, recognition, embedding, focus) -> dict[str, An
     }
 
 
-def write_submission_docs(config: ECCVRenderConfig, assets: RenderAssets, output_path: Path) -> None:
-    tech = config.out_dir / "technical_statement.md"
+def write_render_notes(config: VideoRenderConfig, assets: RenderAssets, output_path: Path) -> None:
+    tech = config.out_dir / "render_notes.md"
     cumulative = assets.recognition.get("cumulative_co2")
     nearest = cumulative.nearest if cumulative else None
     tech.write_text(
@@ -624,8 +624,8 @@ def write_submission_docs(config: ECCVRenderConfig, assets: RenderAssets, output
     )
 
 
-def render_eccv_video(config: ECCVRenderConfig) -> dict[str, Any]:
-    from .scenes import ECCVFrameRenderer  # local import avoids a cycle
+def render_video(config: VideoRenderConfig) -> dict[str, Any]:
+    from .scenes import VideoFrameRenderer  # local import avoids a cycle
 
     config.out_dir.mkdir(parents=True, exist_ok=True)
     required_foundation = config.foundation == "required"
@@ -641,10 +641,10 @@ def render_eccv_video(config: ECCVRenderConfig) -> dict[str, Any]:
 
         audio_path = render_soundtrack(assets, config)
 
-    output_path = config.out_dir / "the_average_nation.mp4"
-    renderer = ECCVFrameRenderer(config, assets)
+    output_path = config.out_dir / "the_national_average.mp4"
+    renderer = VideoFrameRenderer(config, assets)
     render_video_stream(config, renderer, output_path, config.out_dir / "stills", audio_path=audio_path)
-    write_submission_docs(config, assets, output_path)
+    write_render_notes(config, assets, output_path)
 
     return {
         "video": str(output_path),

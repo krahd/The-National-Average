@@ -1,4 +1,4 @@
-"""Continuous machine-pipeline journey for *The Average Nation* (round 6).
+"""Continuous machine-pipeline journey for *The National Average* (round 6).
 
 One flowing pass through the machine's pipeline under a military/gaze HUD: title,
 ingest, segment, tokenize, attend, embed, eigenbasis, retrieve, reconstruct,
@@ -53,7 +53,7 @@ def _fast(p: float, rate: float = 1.6) -> float:
     return ease(min(1.0, p * rate))
 
 
-class ECCVFrameRenderer:
+class VideoFrameRenderer:
     XFADE = 0.5
     NO_HUD = {"title", "coda"}
     # Per-phase glitch bursts: (fraction-of-phase, amplitude); 0.10s wide -> fast.
@@ -173,7 +173,7 @@ class ECCVFrameRenderer:
         draw = ImageDraw.Draw(image)
         hud_frame(image, color=(70, 150, 160), alpha=120)
         m = max(14, int(self.config.width * 0.03))
-        draw_text(draw, (m, int(self.config.height * 0.045)), f"AVERAGE-NATION.PROC // {key.upper()} // t={t:05.1f}s", self.tiny, (110, 180, 188))
+        draw_text(draw, (m, int(self.config.height * 0.045)), f"NATIONAL-AVERAGE.PROC // {key.upper()} // t={t:05.1f}s", self.tiny, (110, 180, 188))
         rx = int(self.config.width * 0.78)
         ry = int(self.config.height * 0.045)
         rec = self.assets.recognition.get(SUBJECT_INTENT)
@@ -202,7 +202,7 @@ class ECCVFrameRenderer:
         cx, cy = self.config.width // 2, int(self.config.height * 0.42)
         hud_frame(image, color=(60, 130, 140), alpha=90)
         if p < 0.45:
-            draw_text(draw, (int(self.config.width * 0.06), int(self.config.height * 0.06)), "INITIALISING // AVERAGE-NATION.PROC", self.tiny, (90, 150, 158))
+            draw_text(draw, (int(self.config.width * 0.06), int(self.config.height * 0.06)), "INITIALISING // NATIONAL-AVERAGE.PROC", self.tiny, (90, 150, 158))
         dashed_circle(draw, cx, cy, int(self.config.height * 0.2), (40, 90, 98), spin=p * 0.6)
         a = ease(min(1.0, p * 1.8))
         draw_text(draw, (cx, cy), TITLE.upper(), self.title_font, tuple(int(c * a) for c in INK), anchor="mm")
