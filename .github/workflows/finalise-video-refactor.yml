@@ -1,0 +1,86 @@
+name: Finalise video refactor
+
+on:
+  push:
+    paths:
+      - '.github/workflows/finalise-video-refactor.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Correct public-facing wording
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              'src/tna/video/pipeline.py': [
+                  ('Production settings for one video video render.', 'Production settings for one video render.'),
+                  ('"Single-channel video, 2026. Silent in this build (audio deferred).",',
+                   'f"Single-channel video, 2026. {\'Data-driven audio enabled.\' if config.audio else \'Silent render.\'}",'),
+              ],
+              'src/tna/video/foundation.py': [
+                  ('Foundation-model asset preparation for the video video renderer.',
+                   'Foundation-model asset preparation for the video renderer.'),
+              ],
+              'src/tna/video/compositor.py': [
+                  ('Shared PIL compositing helpers and ffmpeg streaming for the video video.',
+                   'Shared PIL compositing helpers and ffmpeg streaming for the video.'),
+              ],
+          }
+          for name, edits in replacements.items():
+              path = Path(name)
+              text = path.read_text(encoding='utf-8')
+              for old, new in edits:
+                  if old not in text:
+                      raise SystemExit(f'Expected text not found in {name}: {old}')
+                  text = text.replace(old, new)
+              path.write_text(text, encoding='utf-8')
+
+          Path('.github/workflows/finalise-video-refactor.yml').unlink()
+          PY
+
+      - name: Verify terminology and syntax
+        shell: bash
+        run: |
+          if grep -RInE --exclude-dir=.git --exclude='*.svg' '(ECCV|eccv|video video)' .; then
+            echo 'Stale terminology remains in the current tree.' >&2
+            exit 1
+          fi
+          python -m compileall -q src scripts
+
+      - name: Run tests
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+          pytest -q src/tests/test_no_fabrication.py
+          pytest -q src/tests
+
+      - name: Commit cleanup and retarget baseline tags
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Finalise moving-image source refactor'
+          git push origin HEAD:main
+
+          for tag in v2.2.0 video-2026-v1; do
+            git tag -fa "${tag}" -m "The National Average ${tag}: canonical moving-image work-in-progress source"
+            git push origin -f "refs/tags/${tag}"
+          done
