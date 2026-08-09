@@ -14,21 +14,29 @@ def test_neurips_schedule_is_contiguous_and_complete():
         assert abs(end - next_start) < 1e-9
 
 
-def test_neurips_schedule_keeps_political_core_and_distribution_layers():
+def test_neurips_schedule_keeps_political_core_and_both_new_iterations():
     keys = {key for key, _ in NEURIPS_PHASE_SCHEDULE}
     assert {
         "sources",
         "spaces",
         "distribution",
         "weighting",
+        "matrix",
         "thresholds",
         "erase",
+        "pair",
         "coda",
     }.issubset(keys)
     # Tutorial-heavy baseline phases intentionally do not occupy the submission cut.
     assert "tokenize" not in keys
     assert "attend" not in keys
     assert "name" not in keys
+
+
+def test_matrix_follows_weighting_and_precedes_erasure_sweep():
+    keys = [key for key, _ in NEURIPS_PHASE_SCHEDULE]
+    assert keys.index("weighting") < keys.index("matrix") < keys.index("thresholds")
+    assert keys.index("thresholds") < keys.index("pair") < keys.index("coda")
 
 
 def test_submission_master_has_time_margin():
