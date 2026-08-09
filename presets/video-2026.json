@@ -28,5 +28,15 @@
     "seed": 20260613,
     "audio": true,
     "provenance_overlay": false
+  },
+  "neurips": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "duration": 180.0,
+    "foundation": "required",
+    "seed": 20260613,
+    "audio": true,
+    "provenance_overlay": false
   }
 }
