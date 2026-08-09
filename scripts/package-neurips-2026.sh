@@ -19,10 +19,10 @@ DURATION="$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1
 python - "$DURATION" <<'PY'
 import sys
 v=float(sys.argv[1])
-if v > 180.05:
-    raise SystemExit(f"NeurIPS preview exceeds 3 minutes: {v:.3f}s")
+if v > 180.0:
+    raise SystemExit(f"NeurIPS source exceeds 3 minutes: {v:.3f}s")
 if v < 1:
-    raise SystemExit(f"Invalid preview duration: {v:.3f}s")
+    raise SystemExit(f"Invalid source duration: {v:.3f}s")
 PY
 
 PREVIEW="$OUT_DIR/the-national-average-preview.mp4"
@@ -37,12 +37,13 @@ ffmpeg -y -i "$INPUT" \
 
 # Default thumbnail: the late weighting/erasure region. The contact sheet exists
 # specifically so this choice can be replaced after aesthetic inspection.
-ffmpeg -y -ss 00:01:52 -i "$INPUT" -frames:v 1 "$THUMB"
+ffmpeg -y -ss 00:01:48 -i "$INPUT" -frames:v 1 "$THUMB"
 
-# Twelve-frame visual audit across the complete work.
-ffmpeg -y -i "$INPUT" -vf "fps=1/15,scale=480:-1,tile=4x3" -frames:v 1 "$CONTACT"
+# Twelve-frame visual audit across the complete work. 176 seconds / 12 ≈ 14.7.
+ffmpeg -y -i "$INPUT" -vf "fps=1/14.6667,scale=480:-1,tile=4x3" -frames:v 1 "$CONTACT"
 
-python - "$INPUT" "$PREVIEW" "$THUMB" "$CONTACT" "$DURATION" <<'PY'
+PREVIEW_DURATION="$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$PREVIEW")"
+python - "$INPUT" "$PREVIEW" "$THUMB" "$CONTACT" "$DURATION" "$PREVIEW_DURATION" <<'PY'
 import hashlib
 import json
 import pathlib
@@ -53,8 +54,11 @@ source = pathlib.Path(sys.argv[1])
 preview = pathlib.Path(sys.argv[2])
 thumb = pathlib.Path(sys.argv[3])
 contact = pathlib.Path(sys.argv[4])
-duration = float(sys.argv[5])
+source_duration = float(sys.argv[5])
+preview_duration = float(sys.argv[6])
 limit = 100 * 1024 * 1024
+if preview_duration > 180.0:
+    raise SystemExit(f"Encoded preview exceeds 3 minutes: {preview_duration:.3f}s")
 for p in (preview, thumb):
     size = p.stat().st_size
     print(f"{p.name}: {size / 1024 / 1024:.2f} MiB")
@@ -74,7 +78,8 @@ manifest = {
     "submission": "NeurIPS 2026 Creative AI",
     "artwork": "The National Average",
     "source_video": str(source),
-    "duration_seconds": duration,
+    "source_duration_seconds": source_duration,
+    "preview_duration_seconds": preview_duration,
     "files": {},
 }
 for p in (preview, thumb, contact):
