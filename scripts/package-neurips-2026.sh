@@ -42,17 +42,18 @@ ffmpeg -y -ss 00:01:52 -i "$INPUT" -frames:v 1 "$THUMB"
 # Twelve-frame visual audit across the complete work.
 ffmpeg -y -i "$INPUT" -vf "fps=1/15,scale=480:-1,tile=4x3" -frames:v 1 "$CONTACT"
 
-python - "$PREVIEW" "$THUMB" "$DURATION" <<'PY'
+python - "$INPUT" "$PREVIEW" "$THUMB" "$CONTACT" "$DURATION" <<'PY'
 import hashlib
 import json
-import os
 import pathlib
 import subprocess
 import sys
 
-preview = pathlib.Path(sys.argv[1])
-thumb = pathlib.Path(sys.argv[2])
-duration = float(sys.argv[3])
+source = pathlib.Path(sys.argv[1])
+preview = pathlib.Path(sys.argv[2])
+thumb = pathlib.Path(sys.argv[3])
+contact = pathlib.Path(sys.argv[4])
+duration = float(sys.argv[5])
 limit = 100 * 1024 * 1024
 for p in (preview, thumb):
     size = p.stat().st_size
@@ -72,11 +73,11 @@ if not any(s.get("codec_type") == "video" for s in streams):
 manifest = {
     "submission": "NeurIPS 2026 Creative AI",
     "artwork": "The National Average",
-    "source_video": str(pathlib.Path("$INPUT")),
+    "source_video": str(source),
     "duration_seconds": duration,
     "files": {},
 }
-for p in (preview, thumb):
+for p in (preview, thumb, contact):
     digest = hashlib.sha256(p.read_bytes()).hexdigest()
     manifest["files"][p.name] = {
         "bytes": p.stat().st_size,
