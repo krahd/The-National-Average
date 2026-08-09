@@ -16,7 +16,7 @@ DEFAULT_PRESET_FILE = Path("presets/video-2026.json")
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Render The National Average moving-image work.")
-    parser.add_argument("--preset", choices=["preview", "production"], default="preview")
+    parser.add_argument("--preset", choices=["preview", "production", "neurips"], default="preview")
     parser.add_argument("--preset-file", type=Path, default=DEFAULT_PRESET_FILE)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--width", type=int, default=None)
