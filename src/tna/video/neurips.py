@@ -1,6 +1,6 @@
 """NeurIPS 2026 edition of *The National Average*.
 
-This renderer is deliberately separate from the preserved production baseline.  It
+This renderer is deliberately separate from the preserved production baseline. It
 uses the same computed assets and provenance records, but replaces the dense
 machine-demo dramaturgy with a quieter sequence organised around plurality,
 representation, weighting, erasure, and unresolved coexistence.
@@ -8,7 +8,6 @@ representation, weighting, erasure, and unresolved coexistence.
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
 from PIL import Image, ImageDraw
@@ -27,7 +26,6 @@ from .compositor import (
     rgba_from_rgb,
 )
 from .pipeline import (
-    INTENTS,
     TITLE,
     VideoRenderConfig,
     generate_assets,
@@ -62,7 +60,7 @@ def neurips_segments(duration: float) -> list[tuple[str, float, float]]:
 
 
 class NeurIPSFrameRenderer(VideoFrameRenderer):
-    """Quiet submission edition; no global HUD and almost no glitch spectacle."""
+    """Quiet submission edition; no global HUD and no glitch spectacle."""
 
     XFADE = 1.2
 
@@ -79,35 +77,37 @@ class NeurIPSFrameRenderer(VideoFrameRenderer):
         if not thumbs:
             return image
 
-        cols = 14 if self.config.width >= 1280 else 10
-        rows = 8 if self.config.width >= 1280 else 6
+        # At submission resolution this accommodates the complete current archive
+        # rather than implying plurality with a hand-picked sample.
+        cols = 21 if self.config.width >= 1280 else 14
+        rows = 13 if self.config.width >= 1280 else 9
         n = min(len(thumbs), cols * rows)
         shown = max(1, int(n * ease(min(1.0, p * 1.25))))
-        margin_x = int(self.config.width * 0.065)
-        top = int(self.config.height * 0.16)
+        margin_x = int(self.config.width * 0.055)
+        top = int(self.config.height * 0.15)
         usable_w = self.config.width - 2 * margin_x
-        usable_h = int(self.config.height * 0.65)
+        usable_h = int(self.config.height * 0.68)
         cell_w = usable_w // cols
         cell_h = usable_h // rows
 
         for i, (_, thumb) in enumerate(thumbs[:shown]):
             r, c = divmod(i, cols)
-            tile = fit_image(thumb, (max(8, cell_w - 7), max(8, cell_h - 7)))
+            tile = fit_image(thumb, (max(8, cell_w - 5), max(8, cell_h - 5)))
             x = margin_x + c * cell_w + (cell_w - tile.width) // 2
             y = top + r * cell_h + (cell_h - tile.height) // 2
             paste_rgba(image, rgba_from_rgb(tile, 224), (x, y))
 
         draw_text(
             draw,
-            (margin_x, int(self.config.height * 0.09)),
-            f"SOURCE // {len(self.assets.archive)} political symbols",
+            (margin_x, int(self.config.height * 0.08)),
+            f"SOURCE // archive: {len(self.assets.archive)} political symbols",
             self.label_font,
             MUTED,
         )
         if p > 0.68:
             draw_text(
                 draw,
-                (margin_x, int(self.config.height * 0.86)),
+                (margin_x, int(self.config.height * 0.87)),
                 "before an average, a corpus",
                 self.small,
                 EDGE,
