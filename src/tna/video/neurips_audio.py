@@ -1,9 +1,8 @@
 """Restrained soundtrack for the NeurIPS edition of *The National Average*.
 
-The sound remains procedural. Its structural changes are derived from the same
-weighting records shown by the film: more concentrated distributions produce a
-narrower, lower spectral field; threshold/erasure passages articulate the number
-of contributors that disappear under the selected cut.
+The sound is procedural and structurally coupled to the same weighting records shown
+by the film. Concentration narrows the spectral field; erasure changes event density;
+the equal Israel/Palestine CLIP margin becomes the interval between two tones.
 """
 
 from __future__ import annotations
@@ -47,18 +46,12 @@ def render_neurips_soundtrack(assets, config) -> Path:
     n = int(duration * SR)
     t = np.arange(n) / SR
 
-    stats = {
-        intent: stats_for(intent, run.weights)
-        for intent, run in assets.weights.items()
-    }
+    stats = {intent: stats_for(intent, run.weights) for intent, run in assets.weights.items()}
     subject_run = assets.weights.get(SUBJECT_INTENT)
     subject_stats = stats.get(SUBJECT_INTENT)
     entropy = subject_stats.normalised_entropy if subject_stats else 0.5
     concentration = 1.0 - entropy
 
-    # Continuous low-frequency field. The cutoff is a direct transformation of
-    # the selected weighting's normalised entropy: concentration removes upper
-    # spectral material instead of being represented by an invented sound event.
     cutoff_l = 115.0 + entropy * 120.0
     cutoff_r = cutoff_l * 1.08
     noise_l = _lowpass(rng.normal(0, 1, n), cutoff_l)
@@ -76,7 +69,6 @@ def render_neurips_soundtrack(assets, config) -> Path:
     for key, start, end in neurips_segments(duration):
         phase_dur = end - start
         if key == "distribution":
-            # One sparse event per weighting; frequency follows the real entropy.
             intents = [intent for intent in assets.weights if intent in stats]
             for i, intent in enumerate(intents):
                 s = stats[intent]
@@ -86,16 +78,22 @@ def render_neurips_soundtrack(assets, config) -> Path:
                 _place(right, at + 0.021, tone, 0.10)
         elif key in {"spaces", "weighting", "average"}:
             tone = _pulse(45.0 if key == "spaces" else 39.0, 1.0)
-            _place(left, start + phase_dur * 0.08, tone, 0.09)
-            _place(right, start + phase_dur * 0.08 + 0.025, tone, 0.09)
+            _place(left, start + phase_dur * 0.08, tone, 0.085)
+            _place(right, start + phase_dur * 0.08 + 0.025, tone, 0.085)
+        elif key == "matrix":
+            # Two axes are made audible as two sparse, interlocking pulse grids.
+            for i in range(5):
+                _place(left, start + (i + 0.5) / 5 * phase_dur, _pulse(43.0, 0.42), 0.065)
+            for i in range(6):
+                _place(right, start + (i + 0.5) / 6 * phase_dur, _pulse(47.0, 0.36), 0.055)
         elif key == "thresholds" and subject_run is not None:
             removed = count_below(subject_run.weights, 0.001)
             count = max(3, min(12, round(3 + removed / max(1, len(subject_run.weights)) * 10)))
             for i in range(count):
                 at = start + (i + 0.5) / count * phase_dur
                 tone = _pulse(30.0 - i * 0.32, 0.55)
-                _place(left, at, tone, 0.105)
-                _place(right, at + 0.018, tone, 0.105)
+                _place(left, at, tone, 0.10)
+                _place(right, at + 0.018, tone, 0.10)
         elif key == "erase":
             era = assets.erasure.get(SUBJECT_INTENT)
             erased_frac = era.erased_count / max(1, era.total) if era else 0.5
@@ -103,8 +101,20 @@ def render_neurips_soundtrack(assets, config) -> Path:
             for i in range(count):
                 at = start + (i + 0.5) / count * phase_dur
                 tone = _pulse(28.0 - i * 0.5, 0.6)
-                _place(left, at, tone, 0.115)
-                _place(right, at + 0.018, tone, 0.115)
+                _place(left, at, tone, 0.11)
+                _place(right, at + 0.018, tone, 0.11)
+        elif key == "pair":
+            rec = assets.recognition_tie
+            margin = abs(float(rec.margin)) if rec is not None else 0.0
+            # A zero/near-zero retrieval margin produces near-unison. The mapping is
+            # intentionally simple and documented as sonification, not measurement.
+            separation = min(5.0, margin * 180.0)
+            centre = 41.0
+            a = _pulse(centre - separation / 2.0, 2.2)
+            b = _pulse(centre + separation / 2.0, 2.2)
+            at = start + phase_dur * 0.38
+            _place(left, at, a, 0.13)
+            _place(right, at, b, 0.13)
 
     fade_in = np.clip(t / 3.0, 0.0, 1.0)
     fade_out = np.clip((duration - t) / 8.0, 0.0, 1.0)
@@ -113,7 +123,7 @@ def render_neurips_soundtrack(assets, config) -> Path:
     right *= env
 
     peak = max(float(np.max(np.abs(left))), float(np.max(np.abs(right))), 1e-8)
-    stereo = np.stack([left / peak * 0.64, right / peak * 0.64], axis=1)
+    stereo = np.stack([left / peak * 0.62, right / peak * 0.62], axis=1)
     pcm = (np.clip(stereo, -1.0, 1.0) * 32767).astype("<i2")
 
     path = config.out_dir / "audio" / "the_national_average_neurips_2026.wav"
