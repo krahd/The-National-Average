@@ -147,6 +147,17 @@ python scripts/render_video.py --preset preview
 python scripts/render_video.py --preset production
 ```
 
+Render the independent volumetric latent-world film (the canonical and NeurIPS cuts
+remain unchanged):
+
+```bash
+python scripts/render_latent_flight.py --preset preview
+python scripts/render_latent_flight.py --preset production
+```
+
+See [`docs/latent-flight.md`](docs/latent-flight.md) for its artistic and provenance
+boundary.
+
 ## Outputs and provenance
 
 Generated material is written under `outputs/` by default:
@@ -201,6 +212,7 @@ The video pipeline follows a strict invariant: analytical quantities shown on sc
 | `scripts/verify_analysis.py` | independent checks of analysis records and invariants |
 | `presets/video-2026.json` | preserved preview and production render settings |
 | `docs/video.md` | moving-image status, reproduction, provenance, and preservation policy |
+| `docs/latent-flight.md` | independent annotated latent-world film and render instructions |
 
 A secondary symbolic-music pipeline applies the same logic to hand-authored anthem-like profiles, including tempo, pitch, mode, metre, motifs, and durations.
 

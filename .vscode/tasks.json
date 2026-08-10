@@ -1,0 +1,217 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "TNA: Set Up Render Environment",
+      "type": "process",
+      "command": "/bin/zsh",
+      "args": [
+        "-lc",
+        "set -e\nif [[ ! -x .venv/bin/python ]]; then\n  python3 -m venv .venv\nfi\nif [[ ! -f .venv/.tna-render-ready ]]; then\n  .venv/bin/python -m pip install -e '.[dev,ml,foundation]'\n  touch .venv/.tna-render-ready\nfi"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "TNA: Prepare Foundation Assets",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "scripts/prepare_video_assets.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "TNA: Set Up Render Environment",
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "TNA: Render NeurIPS 2026 Smoke",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "scripts/render_neurips_2026.py",
+        "--width",
+        "640",
+        "--height",
+        "360",
+        "--fps",
+        "6",
+        "--duration",
+        "24",
+        "--foundation",
+        "auto",
+        "--no-audio",
+        "--out-dir",
+        "outputs/video/neurips-smoke"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "TNA: Set Up Render Environment",
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "TNA: Render NeurIPS 2026 (Newest)",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "scripts/render_neurips_2026.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "TNA: Prepare Foundation Assets",
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "TNA: Render Canonical Production",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "scripts/render_video.py",
+        "--preset",
+        "production"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "TNA: Prepare Foundation Assets",
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "TNA: Render Latent World Smoke",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "scripts/render_latent_flight.py",
+        "--width",
+        "640",
+        "--height",
+        "360",
+        "--fps",
+        "6",
+        "--duration",
+        "24",
+        "--foundation",
+        "off",
+        "--no-audio",
+        "--out-dir",
+        "outputs/video/latent-world-smoke"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "TNA: Set Up Render Environment",
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "TNA: Render Latent World Preview",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "scripts/render_latent_flight.py",
+        "--preset",
+        "preview",
+        "--out-dir",
+        "outputs/video/the_national_average_latent_world_preview"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "TNA: Set Up Render Environment",
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "TNA: Render Latent World Production",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "scripts/render_latent_flight.py",
+        "--preset",
+        "production"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "TNA: Prepare Foundation Assets",
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    }
+  ]
+}

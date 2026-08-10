@@ -246,6 +246,9 @@ def render_video_stream(
     output_path: Path,
     still_dir: Path,
     audio_path: Path | None = None,
+    *,
+    encoder_preset: str | None = None,
+    crf: int | None = None,
 ) -> None:
     """Stream rendered frames to ffmpeg. Audio is optional (silent when None)."""
 
@@ -276,8 +279,8 @@ def render_video_stream(
     command += [
         "-c:v", "libx264",
         "-pix_fmt", "yuv420p",
-        "-preset", "medium" if config.preset == "production" else "veryfast",
-        "-crf", "18" if config.preset == "production" else "20",
+        "-preset", encoder_preset or ("medium" if config.preset == "production" else "veryfast"),
+        "-crf", str(crf if crf is not None else (18 if config.preset == "production" else 20)),
     ]
     if audio_path is not None:
         command += ["-c:a", "aac", "-b:a", "192k", "-shortest"]

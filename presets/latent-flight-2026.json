@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "artwork": "The National Average — Latent Flight",
+  "status": "independent-development-cut",
+  "snapshot": "latent-world-2026-v4-accelerating-verdict",
+  "focus_codes": ["ps", "il", "us", "de"],
+  "preview": {
+    "width": 960,
+    "height": 540,
+    "fps": 12,
+    "duration": 58.0,
+    "foundation": "auto",
+    "seed": 20260810,
+    "audio": true
+  },
+  "production": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "duration": 96.0,
+    "foundation": "required",
+    "seed": 20260810,
+    "audio": true
+  }
+}

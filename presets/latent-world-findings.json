@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "description": "Archived computed CLIP findings used by the annotated latent-world film.",
+  "source_run": {
+    "renderer": "the_national_average_neurips_2026",
+    "seed": 20260613,
+    "model": "openai/clip-vit-base-patch32",
+    "trace_root": "outputs/video/the_national_average_neurips_2026/assets/traces"
+  },
+  "clip_retrieval": {
+    "equal_199": {
+      "intent": "equal",
+      "nearest_code": "sc",
+      "nearest_name": "Seychelles",
+      "similarity": 0.9099,
+      "source": "trace_equal_clip.json"
+    },
+    "historical_co2_199": {
+      "intent": "cumulative_co2",
+      "nearest_code": "us",
+      "nearest_name": "United States",
+      "similarity": 0.9233,
+      "source": "trace_cumulative_co2_clip.json"
+    },
+    "israel_palestine_equal_pair": {
+      "codes": ["il", "ps"],
+      "weights": [0.5, 0.5],
+      "similarity_each": 0.9659,
+      "margin": 0.0,
+      "source": "outputs/video/the_national_average_neurips_2026/render_notes.md"
+    }
+  }
+}
