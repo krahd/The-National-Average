@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "artwork": "The National Average — Latent Flight",
-  "status": "independent-development-cut",
+  "artwork": "The National Average",
+  "status": "neurips-2026-creative-ai-submission-edition",
   "snapshot": "latent-world-2026-v4-accelerating-verdict",
   "focus_codes": ["ps", "il", "us", "de"],
   "preview": {
