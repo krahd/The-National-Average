@@ -1,85 +1,64 @@
-# NeurIPS 2026 Creative AI — artwork package
+# NeurIPS 2026 Creative AI - artwork package
 
-**Artwork:** The National Average  
+**Artwork:** *The National Average*  
 **Artist:** Tomas Laurenzo  
-**Track:** NeurIPS 2026 Creative AI — Agency  
-**Status:** expanded submission edition implemented; full render/visual approval pending  
-**Deadline target:** 10 August 2026 AoE; recheck the live OpenReview form immediately before upload.
+**Track:** NeurIPS 2026 Creative AI - Agency  
+**Submission artwork:** latent-world moving-image edition  
+**Canonical branch:** `main`  
+**Canonical renderer:** `scripts/render_latent_flight.py`  
+**Canonical production output:** `outputs/video/the_national_average_latent_world/the_national_average_latent_world.mp4`
 
-## Submission description draft
+## Authoritative submission edition
 
-### The National Average
+The work being submitted to NeurIPS 2026 Creative AI is the accelerating volumetric latent-world film implemented on `main`, not the earlier 176-second representation/weighting-matrix cut.
 
-*The National Average* is a generative moving-image work about averaging as a representational operation.
+The production preset in `presets/latent-flight-2026.json` defines:
 
-The source material is a corpus of national and quasi-national flags. Flags are useful here because they already perform an extreme compression: historical processes of sovereignty, occupation, independence, territory and political identity are transformed into a small number of colours and geometries designed to remain recognisable. The work submits these objects to a second compression. It asks what a computational system means when it is asked to produce their average.
+- 1920x1080;
+- 24 fps;
+- 96 seconds;
+- deterministic render seed `20260810`;
+- foundation representations required;
+- procedural stereo soundtrack enabled.
 
-There is no unique operation hidden under that word. An image can be averaged directly in pixel space, reduced to colour distributions, reconstructed through deterministic geometry, projected into a corpus-specific PCA basis, or moved into representations produced elsewhere by pretrained systems such as CLIP and a Stable Diffusion VAE. Independently, the same political entities can be given equal weight or weighted by population, GDP, annual CO2 emissions, or cumulative historical CO2 emissions. Representation and weighting are orthogonal decisions, although a final synthetic image can make both disappear.
+The earlier NeurIPS-specific 176-second renderer remains historical project material but is **superseded for this submission**. It must not be used to prepare the artwork description, thumbnail or video preview.
 
-The NeurIPS edition gives these decisions duration. It begins with the source corpus, before any average is shown. Different representation spaces then produce incompatible objects from the same input. Weighting distributions are shown not only through final images but through their actual concentration: normalised entropy, effective contributor count, maximum contribution, and the gradual disappearance produced by a changing contribution threshold. A representation × weighting matrix places both axes in the same field, making visible that changing either operation changes the object called *the average*.
+## Work
 
-A later scene takes two flags, Israel and Palestine, with exactly equal contribution. The film presents their real pixel average together with the CLIP retrieval relation computed by the project. Nothing is inferred from this operation beyond what it does: two politically irreducible objects can become statistically commensurable, and the representation can return a precise numerical relation while remaining incapable of deciding what that relation should mean.
+*The National Average* is a generative moving-image work in which a camera accelerates through a software-rendered volumetric world built from computational representations of national and quasi-national flags. It appears to search for a centre: a barycentric average that remains ahead of it and changes as the conditions of averaging change. The search never settles. The conclusion places five incompatible weighted averages in the same field and states: **THE AVERAGE IS NOT FOUND. IT IS ENFORCED.**
 
-The film ends with several incompatible averages derived from the same corpus. None is designated as correct.
+The source material is a corpus of political symbols. The work treats averaging as a sequence of consequential operations rather than a neutral calculation: selection, representation, normalisation, weighting and synthesis. This strategy is developed as *critical averaging* in the related accepted IBERAMIA 2026 paper *Critical Averaging and the Politics of Statistical Representation*.
 
-### AI/ML
+The film turns the apparatus into duration and spatial pursuit. Its opening makes the corpus boundary explicit: 251 political symbols enter the archive and 199 survive the metadata boundary. The traversal then moves through a route of selection, representation, commensuration, reconstruction, weight/power, threshold/erasure, foundation-model retrieval, moving synthesis and no settlement.
 
-Machine learning is one layer of a heterogeneous representational apparatus rather than a decorative generator placed after the argument.
+The volumetric material includes:
 
-The NeurIPS edition uses:
+- weather systems derived from the first three coordinates of a 32-component PCA/eigenflag representation of the full corpus;
+- non-planar colour-density fields from Palestine, Israel, the United States and Germany and their truncated PCA reconstructions;
+- spectral mist derived from eigenflags;
+- Stable Diffusion VAE posterior means diffused into turbulent spatial material;
+- a continuously reweighted PCA barycentre rendered as a receding colour front ahead of the camera.
 
-- direct pixel averaging;
-- dominant-colour/palette representations;
-- PCA/eigenflag representations learned from the project corpus;
-- deterministic SVG/structured recomposition;
-- `openai/clip-vit-base-patch32` for image embeddings, retrieval, saliency and representational relations;
-- `stabilityai/sd-vae-ft-mse` as a pretrained latent image representation.
+Trace-bound process apertures expose real intermediate artefacts: eigenflags, truncated PCA decodes, the equal Palestine/Israel pixel mean, weighting-specific pixel averages, CLIP query images and live PCA barycentric decodes. The final field samples five real pixel-space weighted averages: equal contribution, population, GDP, annual CO2 and cumulative historical CO2.
 
-The five weighting intentions used in the film are equal contribution, population, GDP, annual CO2, and cumulative historical CO2. Every displayed contribution, residual, saliency result, retrieval, similarity, weighting, entropy, effective contributor count and threshold count originates in a computed record. The renderer can change duration, scale and visual arrangement; it may not fabricate an analytical result for dramatic effect.
+## AI and ML
 
-The soundtrack follows the same rule. It is generated procedurally, but selected sonic parameters are mapped from existing records: weighting concentration affects spectral breadth, erasure affects sparse-event density, and the retrieval margin in the equal Israel/Palestine pair controls the separation between two tones. These mappings are sound design; the sound is not presented as another measurement.
+Machine learning is part of the work's representational apparatus rather than a decorative generator. The film uses a PCA basis fitted to the project corpus, `stabilityai/sd-vae-ft-mse` as a pretrained latent image representation, and `openai/clip-vit-base-patch32` for learned semantic relations and retrieval.
 
-### Agency
+The distinction between computed quantities and artistic treatment is strict. Corpus membership, PCA coordinates and residuals, weighting statistics, threshold erasure, retrieval findings and intermediate artefacts originate in project records. Camera movement, route geometry, fog, advection, deformation, chromatic fracture and glitches are artistic operations. The renderer may dramatise a computed relation; it may not fabricate one.
 
-The artwork's agency does not begin with the final generative operation.
+The soundtrack follows the same boundary. Artistic focus weights and real PCA-coordinate energies modulate its industrial sound field, and visual cuts create corresponding sonic ruptures. The soundtrack is not presented as a measurement or national sonification.
 
-Before an average can be produced, the system must already have a corpus; decide which political entities count as members of it; choose a representation; choose a weighting criterion; normalise values; choose learned or non-learned computational spaces; and decide how a representation will be converted back into an image. Some of these decisions belong to this project. Others are inherited from statistical datasets, model training, checkpoint construction, and prior visual corpora.
+## Agency
 
-The resulting image can nevertheless appear singular. It has the authority of an answer even when its conditions are multiple.
+Agency is located upstream of the final generated image. The moving barycentre depends on prior decisions about corpus membership, missing-data boundaries, weighting criteria, representational spaces, model architectures, checkpoints and reconstruction. Some decisions are authored in the artwork; others are inherited from statistical institutions, public datasets, flag taxonomies, training corpora and pretrained models.
 
-The NeurIPS edition treats this disappearance of prior decisions as the central problem of Agency. Equal weighting produces one object; population another; GDP and carbon histories produce others. Changing representation while holding the weighting fixed produces another set of disagreements. A threshold can leave every country technically included while making many of them practically invisible. The computational system can execute all of these operations automatically. It cannot determine which one ought to represent a nation, a world, or a political relation.
+The film therefore does not reduce Agency to a competition between human and machine authorship. It makes visible how the capacity to determine what becomes representative is distributed across the apparatus. The camera can pursue a mathematically valid centre indefinitely because no privileged centre exists before those operations manufacture one.
 
-### Technical form
+## Submission package
 
-- single-channel generative/data-driven moving image;
-- NeurIPS edition target: **176 seconds**, 1920×1080, 24 fps;
-- deterministic render seed: `20260613`;
-- foundation representations: `openai/clip-vit-base-patch32`, `stabilityai/sd-vae-ft-mse`, with resolved local snapshot revisions retained in render provenance;
-- separate NeurIPS renderer; preserved canonical `video-2026-v1` baseline is not overwritten;
-- procedural stereo soundtrack linked to computed project records;
-- complete source, datasets/provenance, analysis records, render pipeline, tests, packaging scripts and preservation documentation maintained in the project repository.
+The canonical opportunity package is maintained in:
 
-### Artist biography
+`krahd/professional-opportunities/artistic-submissions/2026-08-10_neurips-creative-ai_the-national-average/`
 
-Tomas Laurenzo is an artist, computer scientist, and Associate Professor of Critical Media Practices at the University of Colorado Boulder. His work examines the political and aesthetic conditions of computation, artificial intelligence, interaction, and technical media through artworks, software systems, and scholarly research. His work has been presented at venues including NeurIPS, Ars Electronica, SIGGRAPH Asia, ISEA, CVPR, Sónar+D and MUTEK. Recent generative works include *Montevideo, 1983*, *Hommage Numérique*, *Abandoned Future*, and *Ave Imperator*. His earlier research on media appropriation, human–computer ideology, and the user–programmer continuum forms part of the theoretical context of *The National Average*.
-
-## Current production / review gate
-
-The NeurIPS renderer and its two additional expansion/test iterations are implemented and lightweight tests pass. The full foundation-model render has not yet been aesthetically approved. Before submission:
-
-1. render the 176-second 1920×1080 edition;
-2. inspect the full film and contact sheet;
-3. verify that the representation × weighting matrix is legible without becoming a dashboard;
-4. verify that the threshold sweep reads as disappearance rather than merely animation;
-5. verify that the Israel/Palestine scene remains severe, factual and non-sensational;
-6. verify that the data-linked sound remains subordinate to the image;
-7. package and validate preview/thumbnail;
-8. typeset this statement to ≤3 NeurIPS pages.
-
-## Required upload assets
-
-- `the-national-average-neurips-2026.pdf` — ≤3 pages, NeurIPS format;
-- `the-national-average-thumbnail.png` — <100 MB;
-- `the-national-average-preview.mp4` — ≤3 minutes and <100 MB.
-
-Submission derivatives remain separate from the venue-independent canonical artwork source.
+The artwork-description source must describe this 96-second latent-world edition. The thumbnail must be a genuine frame from this renderer. The video asset must be the 96-second production master or a submission encoding made directly from that master, not the obsolete 176-second derivative.
