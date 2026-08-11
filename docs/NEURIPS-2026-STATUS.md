@@ -1,11 +1,35 @@
-# NeurIPS 2026 execution status — The National Average
+# NeurIPS 2026 execution status - The National Average
 
-**State:** two additional development/test iterations complete; full render/visual approval pending.  
-**Date:** 9 August 2026.
+**State:** NeurIPS artwork submission package ready for OpenReview upload; canonical full foundation-model render remains available as a later replacement only if completed before upload.  
+**Date:** 11 August 2026.
 
 ## Preserved boundary
 
 The canonical `video-2026-v1` / production renderer remains untouched. The NeurIPS edition is a separate 1920×1080 / 24 fps / **176-second** derivative with foundation models required, giving explicit margin under the three-minute upload ceiling.
+
+The opportunity-specific package is canonical in:
+
+```text
+krahd/professional-opportunities/
+  artistic-submissions/2026-08-10_neurips-creative-ai_the-national-average/
+```
+
+That package now contains the final description source, compliance record, media manifest and exact checksums. The delivery binaries have also been generated locally for portal upload.
+
+## Submission-ready derivative - 11 August
+
+Because the repository contains the full NeurIPS renderer but no committed rendered master, a separate programmatic submission-preview derivative was generated and audited for the portal package. It is explicitly not represented as the canonical full foundation-model render.
+
+Current upload assets:
+
+- official NeurIPS 2026 `creativeai` description PDF: **2 pages**, US Letter, embedded Type 1 fonts, official author kit, successful GitHub Actions compile and page-by-page visual preflight;
+- thumbnail PNG: **161,855 bytes**;
+- preview MP4: **176.000 seconds**, H.264/AAC, 1280×720, 24 fps, **5,676,183 bytes**;
+- exact SHA-256 values are recorded in the opportunity package.
+
+The submission preview displays only measurements that are either recomputed directly in that derivative or recorded in the accepted IBERAMIA paper. It does not fabricate foundation-model measurements to imitate an unavailable render.
+
+The final statement foregrounds the work's strongest Agency claim: agency exists upstream of the final image, distributed across corpus definition, representation, weighting, normalisation, model architecture, pretrained checkpoints, synthesis and retrieval. The text also records explicitly that the moving-image work and its soundtrack are produced **programmatically from end to end**, from corpus ingestion through submission validation.
 
 ## NeurIPS edition now implemented
 
@@ -21,7 +45,7 @@ The canonical `video-2026-v1` / production renderer remains untouched. The NeurI
 - separate procedural soundtrack;
 - package generation with source/encoded duration checks, `<100 MiB` checks, thumbnail, contact sheet and SHA-256 manifest.
 
-### Additional iteration 1 — concentration / erasure
+### Additional iteration 1 - concentration / erasure
 
 New real measures in `src/tna/video/neurips_metrics.py`:
 
@@ -43,7 +67,7 @@ Sound:
 
 No sonification is presented as a measurement. It is a documented mapping from existing measurements.
 
-### Additional iteration 2 — representation × weighting / concrete pair
+### Additional iteration 2 - representation × weighting / concrete pair
 
 New moving-image operations:
 
@@ -69,7 +93,7 @@ Lightweight NeurIPS tests run in GitHub Actions and pass after the second iterat
 
 GPU/foundation-dependent rendering is deliberately excluded from CI and still requires the full local/project environment.
 
-## Execute
+## Execute canonical full renderer
 
 From the repository root:
 
@@ -89,7 +113,7 @@ python scripts/render_neurips_2026.py \
   --out-dir outputs/video/neurips-smoke
 ```
 
-## Visual review gate
+## Visual review gate for canonical full renderer
 
 Inspect:
 
@@ -111,7 +135,7 @@ Only revise after observing a concrete failure in the rendered work.
 
 ## Submission derivatives
 
-Expected after successful execution:
+Canonical full-render outputs, when executed, remain:
 
 ```text
 outputs/submissions/neurips-2026/
@@ -121,4 +145,4 @@ outputs/submissions/neurips-2026/
   media-manifest.json
 ```
 
-The ≤3-page PDF remains a textual/typesetting derivative. Canonical prose is `docs/neurips-2026-creative-ai.md`.
+The final NeurIPS description and exact submission-package record are now owned by `krahd/professional-opportunities`; project-level conceptual and implementation source remains here.
