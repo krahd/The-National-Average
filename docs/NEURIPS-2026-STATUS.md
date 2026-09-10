@@ -1,11 +1,12 @@
 # NeurIPS 2026 execution status - The National Average
 
-**State:** latent-world artwork edition is the canonical NeurIPS 2026 Creative AI submission work; final visual description package is being built from this edition.  
-**Date:** 11 August 2026.
+**State:** submitted to NeurIPS 2026 Creative AI; outcome pending.  
+**Date:** 11 August 2026.  
+**Submission number:** **197**.
 
 ## Authoritative submission edition
 
-The artwork being submitted to NeurIPS 2026 is the latent-world moving-image edition implemented on `main` and rendered by:
+The artwork submitted to NeurIPS 2026 is the latent-world moving-image edition implemented on `main` and rendered by:
 
 ```text
 scripts/render_latent_flight.py
@@ -75,9 +76,9 @@ krahd/professional-opportunities/
   artistic-submissions/2026-08-10_neurips-creative-ai_the-national-average/
 ```
 
-The final description source now describes only the 96-second latent-world artwork and uses genuine frames regenerated from this repository's `main` branch. The intended portal thumbnail is likewise a genuine latent-world frame rather than the obsolete 176-second submission derivative.
+The submitted description describes only the 96-second latent-world artwork and uses genuine frames regenerated from this repository's `main` branch. The portal thumbnail is likewise a genuine latent-world frame rather than the obsolete 176-second submission derivative.
 
-The description is compiled through the official NeurIPS 2026 `creativeai` template workflow. Portal submission remains `ready`, not `submitted`, until an OpenReview confirmation and exact uploaded binaries are archived.
+The description was compiled through the official NeurIPS 2026 `creativeai` template workflow. Tomas Laurenzo directly confirmed submission on 11 August 2026 and supplied submission number **197** on 10 September 2026. This resolves the numeric submission-number gap but does not by itself establish the persistent OpenReview forum identifier, exact portal URL, receipt timestamp, or byte identity of uploaded files.
 
 ## Programmatic production
 
@@ -87,10 +88,9 @@ The moving image and soundtrack are produced programmatically from end to end. C
 
 The separate `src/tna/video/neurips.py` 176-second renderer, its concentration/erasure metrics, representation × weighting matrix, equal Israel/Palestine sequence and associated tests remain useful project history. They are not the current NeurIPS artwork deliverable and must not be treated as the submission master in future packaging work.
 
-## Current gate
+## Post-submission record
 
-1. finish official-template visual PDF build and page-by-page audit;
-2. freeze the genuine latent-world thumbnail and its checksum;
-3. stage the 96-second latent-world production master or a direct submission encoding from that master;
-4. upload the three required assets to OpenReview;
-5. archive the submission ID, confirmation, portal metadata and exact uploaded binaries in `krahd/professional-opportunities`.
+- Preserve the frozen submitted description, thumbnail and video manifestations without substituting the superseded 176-second derivative.
+- Archive the persistent OpenReview/forum identifier or receipt URL if recovered.
+- Archive exact uploaded binaries and checksums if recovered.
+- Keep later production or exhibition versions separate from the frozen NeurIPS submission.
