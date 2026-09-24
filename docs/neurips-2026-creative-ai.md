@@ -62,3 +62,7 @@ The canonical opportunity package is maintained in:
 `krahd/professional-opportunities/artistic-submissions/2026-08-10_neurips-creative-ai_the-national-average/`
 
 The artwork-description source must describe this 96-second latent-world edition. The thumbnail must be a genuine frame from this renderer. The video asset must be the 96-second production master or a submission encoding made directly from that master, not the obsolete 176-second derivative.
+
+## 2026 review outcome
+
+The work was accepted to the NeurIPS Creative AI Track 2026, Artwork track. The Program Chairs recorded the Accept decision on 18 September 2026; the OpenReview record was modified on 22 September 2026. Submission #197 is archived at `https://openreview.net/forum?id=MnitJ1jTdQ`. The acceptance notification and final reviews supplied on 23 September 2026 are preserved in `docs/NEURIPS-2026-REVIEWS.md`.
