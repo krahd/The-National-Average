@@ -25,14 +25,14 @@ This file preserves the review evidence supplied after acceptance. Reviewer text
 >
 > We will keep this message brief. Further details and next steps will be communicated separately.
 >
-> Best regards,  
+> Best regards,
 > NeurIPS Creative AI Track 2026 Program Chairs
 
 ## Official review — Reviewer 18wG
 
 **Title:** A 3d flythrough political concept embeddings but feels like random noise
 
-**Rating:** 3: Marginally around acceptance threshold, borderline  
+**Rating:** 3: Marginally around acceptance threshold, borderline
 **Confidence:** 4: The reviewer is confident but not absolutely certain that the evaluation is correct
 
 > The artwork presents embeding of political concepts projected in 3d space, with a video-game style flythrough. I think that the concept could be interesting if it would have visualized various semantic relations as spatial relations. However, while the video is mesmerizing, it seems completly cryptic. It is not clear what is going on without reading the paper, and even after reading the backstoty I could not comprehend anything meaningful out of the visualization. Going from concepts to numbers to graphics, if the graphic looks like random noise and do not demontrate interesting relations, then I am not sure what is the value of going through this process.
@@ -41,7 +41,7 @@ This file preserves the review evidence supplied after acceptance. Reviewer text
 
 **Title:** This paper fits for inclusion in the NeurIPS creative track, but with some further clarifications clearly articulated.
 
-**Rating:** 4: Good paper, accept  
+**Rating:** 4: Good paper, accept
 **Confidence:** 4: The reviewer is confident but not absolutely certain that the evaluation is correct
 
 > This work appears conceptually and technically rich, though lacks some clarity in how it has been communicated. The author makes some jumps that are difficult to follow e.g. ‘the search cannot be completed’ – what search? ‘Occupying the same field’ – what is the field in this context? What was the discriminator for the metadata boundary?

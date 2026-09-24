@@ -1,10 +1,10 @@
 # NeurIPS 2026 execution status - The National Average
 
-**State:** accepted to the NeurIPS 2026 Creative AI Track, Artwork track.  
-**Submission date:** 11 August 2026.  
-**Decision:** Accept, 18 September 2026; OpenReview decision modified 22 September 2026.  
-**Acceptance notification supplied:** 23 September 2026.  
-**Submission number:** **197**.  
+**State:** accepted to the NeurIPS 2026 Creative AI Track, Artwork track.
+**Submission date:** 11 August 2026.
+**Decision:** Accept, 18 September 2026; OpenReview decision modified 22 September 2026.
+**Acceptance notification supplied:** 23 September 2026.
+**Submission number:** **197**.
 **OpenReview:** `https://openreview.net/forum?id=MnitJ1jTdQ`.
 
 ## Authoritative submission edition
