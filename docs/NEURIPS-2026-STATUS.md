@@ -1,8 +1,11 @@
 # NeurIPS 2026 execution status - The National Average
 
-**State:** submitted to NeurIPS 2026 Creative AI; outcome pending.  
-**Date:** 11 August 2026.  
+**State:** accepted to the NeurIPS 2026 Creative AI Track, Artwork track.
+**Submission date:** 11 August 2026.
+**Decision:** Accept, 18 September 2026; OpenReview decision modified 22 September 2026.
+**Acceptance notification supplied:** 23 September 2026.
 **Submission number:** **197**.
+**OpenReview:** `https://openreview.net/forum?id=MnitJ1jTdQ`.
 
 ## Authoritative submission edition
 
@@ -78,7 +81,15 @@ krahd/professional-opportunities/
 
 The submitted description describes only the 96-second latent-world artwork and uses genuine frames regenerated from this repository's `main` branch. The portal thumbnail is likewise a genuine latent-world frame rather than the obsolete 176-second submission derivative.
 
-The description was compiled through the official NeurIPS 2026 `creativeai` template workflow. Tomas Laurenzo directly confirmed submission on 11 August 2026 and supplied submission number **197** on 10 September 2026. This resolves the numeric submission-number gap but does not by itself establish the persistent OpenReview forum identifier, exact portal URL, receipt timestamp, or byte identity of uploaded files.
+The description was compiled through the official NeurIPS 2026 `creativeai` template workflow. Tomas Laurenzo directly confirmed submission on 11 August 2026 and supplied submission number **197** on 10 September 2026. The persistent OpenReview forum is `MnitJ1jTdQ` (`https://openreview.net/forum?id=MnitJ1jTdQ`). The Program Chairs recorded an **Accept** decision on 18 September 2026, modified 22 September 2026; Tomas supplied the acceptance notification and final reviews on 23 September 2026. The exact portal receipt timestamp and byte identity of the uploaded video remain unarchived.
+
+## Review outcome
+
+The submission was accepted to the Artwork track. The complete decision and reviewer record is preserved in `docs/NEURIPS-2026-REVIEWS.md`.
+
+The two official reviews identify two distinct revision problems. Reviewer 18wG found the moving image visually compelling but too cryptic to communicate the computational and political relations without the paper, making visual legibility itself a future design question. Reviewer YPBT judged the work conceptually and technically rich and recommended inclusion, while requesting clearer definitions of the search and field, an explicit account of the metadata boundary, justification for the four-nation focus, and clarification of the binary division discussed around line 75 in relation to distributed agency.
+
+These comments apply to future development; they do not alter the frozen submitted edition.
 
 ## Programmatic production
 
@@ -91,6 +102,7 @@ The separate `src/tna/video/neurips.py` 176-second renderer, its concentration/e
 ## Post-submission record
 
 - Preserve the frozen submitted description, thumbnail and video manifestations without substituting the superseded 176-second derivative.
-- Archive the persistent OpenReview/forum identifier or receipt URL if recovered.
+- Preserve the accepted OpenReview record at `https://openreview.net/forum?id=MnitJ1jTdQ` and the full reviews in `docs/NEURIPS-2026-REVIEWS.md`.
 - Archive exact uploaded binaries and checksums if recovered.
+- Await the organisers' further details and next steps; record them separately from the frozen submission.
 - Keep later production or exhibition versions separate from the frozen NeurIPS submission.
