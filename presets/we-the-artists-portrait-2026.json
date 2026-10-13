@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "artwork": "The National Average",
+  "status": "2026 WE THE ARTISTS portrait delivery candidate; not yet rendered or artist-reviewed",
+  "snapshot": "latent-world-2026-v4-accelerating-verdict-portrait-test-01",
+  "focus_codes": [
+    "ps",
+    "il",
+    "us",
+    "de"
+  ],
+  "preview": {
+    "width": 540,
+    "height": 960,
+    "fps": 12,
+    "duration": 12,
+    "foundation": "required",
+    "seed": 20260810,
+    "audio": true
+  },
+  "production": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 24,
+    "duration": 96,
+    "foundation": "required",
+    "seed": 20260810,
+    "audio": true
+  }
+}
