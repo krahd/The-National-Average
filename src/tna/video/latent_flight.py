@@ -1155,6 +1155,7 @@ class LatentFlightRenderer:
         self.assets = assets
         self.width = config.width
         self.height = config.height
+        self.portrait = self.height > self.width
         self.film_phases = film_phase_segments(config.duration)
         self.search_start = self.film_phases[2][1]
         self.search_end = self.film_phases[2][2]
@@ -1595,11 +1596,16 @@ class LatentFlightRenderer:
         roll = 0.035 * math.sin(time * 0.37) + float(jump_rng.uniform(-0.05, 0.05)) * energy
         if key in {"collision", "axis_snap", "parameter_break", "escape"}:
             roll += math.sin(time * 3.3) * (0.10 + progress * 0.16)
-        focal = self.width * (
+        focal_basis = self.height if self.portrait else self.width
+        focal = focal_basis * (
             0.78
             + (0.065 + progress * 0.105)
             * math.sin(time * (0.16 + progress * 0.17) + local * math.pi)
         )
+        if self.portrait:
+            # Keep the original depth traversal while looking through a taller,
+            # narrower volume. No landscape frame is cropped into this view.
+            target[1] += 1.35 * math.sin(time * 0.21 + progress * math.tau)
         return Camera(position, target, roll, focal), key, local
 
     def _project_many(
@@ -2183,6 +2189,9 @@ class LatentFlightRenderer:
         local: float,
         time: float,
     ) -> None:
+        if self.portrait:
+            self._draw_opening_portrait(image, phase, local, time)
+            return
         layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(layer, "RGBA")
         margin = max(28, self.width // 12)
@@ -2276,6 +2285,53 @@ class LatentFlightRenderer:
             )
         image.paste(layer, (0, 0), layer)
 
+    def _draw_opening_portrait(
+        self, image: Image.Image, phase: str, local: float, time: float
+    ) -> None:
+        layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(layer, "RGBA")
+        w, h = self.width, self.height
+        margin = int(w * 0.085)
+        content_width = w - 2 * margin
+        draw.rectangle((0, 0, w, h), fill=(0, 2, 7, 186))
+        draw.line((margin, int((time * 71) % h), w - margin, int((time * 71) % h)), fill=(76, 226, 255, 38))
+        if phase == "title":
+            alpha = int(255 * min(1.0, local / 0.18) * min(1.0, (1.0 - local) / 0.12))
+            kicker = self._fit_font(draw, "ARTWORK / COMPUTATIONAL IMAGE / 2026", content_width, max(18, w // 43), 14)
+            draw.text((margin, h * 0.15), "ARTWORK / COMPUTATIONAL IMAGE / 2026", font=kicker, fill=(92, 225, 245, alpha))
+            title = "THE\nNATIONAL\nAVERAGE"
+            title_font = self._fit_font(draw, "NATIONAL", content_width, max(78, w // 8), 36)
+            spacing = max(1, h // 120)
+            for offset, colour in ((3, (255, 38, 91, alpha // 3)), (-3, (35, 226, 255, alpha // 3)), (0, (244, 248, 248, alpha))):
+                draw.multiline_text((margin + offset, h * 0.27), title, font=title_font, fill=colour, spacing=spacing)
+            if local > 0.36:
+                credit_alpha = int(255 * min(1.0, (local - 0.36) / 0.18))
+                draw.text((margin, h * 0.76), AUTHOR.upper(), font=self.open_credit, fill=(229, 240, 243, credit_alpha))
+                draw.text((margin, h * 0.795), WEBSITE.upper(), font=self.open_kicker, fill=(92, 225, 245, credit_alpha))
+        else:
+            alpha = int(255 * min(1.0, local / 0.12) * min(1.0, (1.0 - local) / 0.10))
+            title = "WHAT DOES IT MEAN\nTO AVERAGE A NATION?"
+            font = self._fit_font(draw, "TO AVERAGE A NATION?", content_width, max(33, w // 25), 22)
+            draw.multiline_text((margin, h * 0.16), title, font=font, fill=(246, 249, 249, alpha), spacing=max(8, h // 120))
+            statements = (
+                "251 POLITICAL SYMBOLS ENTER AN ARCHIVE.",
+                "199 SURVIVE THE METADATA BOUNDARY.",
+                "THE SYSTEM CHOOSES A SPACE, ASSIGNS WEIGHTS, ERASES, AND SYNTHESISES.",
+                "THE OUTPUT LOOKS SINGULAR. ITS CONDITIONS ARE NOT.",
+            )
+            body_font = load_font(max(20, w // 42), mono=True)
+            y = h * 0.43
+            step = max(29, h // 48)
+            draw.rectangle((margin - 17, y - 10, margin - 9, h * 0.82), fill=(255, 58, 94, alpha))
+            for index, statement in enumerate(statements):
+                reveal = min(1.0, max(0.0, (local - 0.18 - index * 0.13) / 0.11))
+                for line in self._wrap_lines(draw, statement, body_font, content_width):
+                    if reveal > 0:
+                        draw.text((margin, y), line, font=body_font, fill=(174, 216, 224, int(alpha * reveal)))
+                    y += step
+                y += step * 0.45
+        image.paste(layer, (0, 0), layer)
+
     def _process_peek_asset(
         self,
         chapter: str,
@@ -2327,6 +2383,29 @@ class LatentFlightRenderer:
         if window <= 0.0:
             return
         source, label = asset
+        if self.portrait:
+            panel_w = int(self.width * 0.44)
+            image_w = panel_w - 28
+            image_h = int(image_w * 0.75)
+            panel_h = image_h + max(70, self.height // 20) + (30 if self.width < 800 else 0)
+            x0 = int(self.width * 0.075)
+            y0 = int(self.height * 0.695)
+            panel = Image.new("RGBA", (panel_w, panel_h), (0, 4, 9, 220))
+            draw = ImageDraw.Draw(panel, "RGBA")
+            panel.paste(source.convert("RGB").resize((image_w, image_h), Image.Resampling.BILINEAR), (14, 14))
+            draw.rectangle((14, 14, 14 + image_w, 14 + image_h), outline=(88, 228, 248, 225))
+            tiny = self._fit_font(draw, "PROCESS APERTURE / TRACE-BOUND", image_w, max(13, self.width // 75), 10)
+            draw.text((14, image_h + 21), "PROCESS APERTURE / TRACE-BOUND", font=tiny, fill=(88, 228, 248, 225))
+            if self.width < 800:
+                label_font = load_font(max(12, self.width // 50), mono=True)
+                label_lines = self._wrap_lines(draw, label, label_font, image_w)
+                draw.multiline_text((14, image_h + 45), "\n".join(label_lines), font=label_font, fill=(218, 235, 238, 235), spacing=3)
+            else:
+                label_font = self._fit_font(draw, label, image_w, max(16, self.width // 62), 11)
+                draw.text((14, image_h + 45), label, font=label_font, fill=(218, 235, 238, 235))
+            panel.putalpha(int(255 * window))
+            image.paste(panel, (x0, y0), panel)
+            return
         panel_w = max(180, int(self.width * 0.205))
         image_w = panel_w - max(20, self.width // 90)
         image_h = int(image_w * 0.75)
@@ -2372,12 +2451,17 @@ class LatentFlightRenderer:
             reveal = float(np.clip((local - 0.05 - index * 0.055) / 0.20, 0.0, 1.0))
             if reveal <= 0.0:
                 continue
-            moved = points.copy() * (0.47 + reveal * 0.13)
+            moved = points.copy() * ((0.38 + reveal * 0.09) if self.portrait else (0.47 + reveal * 0.13))
             moved[:, 0] += np.sin(phases + time * 0.83) * (0.18 + local * 0.34)
             moved[:, 1] += np.cos(phases * 1.2 - time * 0.71) * (0.16 + local * 0.28)
             moved[:, 2] += np.sin(phases * 0.7 + time * 1.1) * (0.24 + local * 0.52)
             depth = 27.0 + index * 1.9 + math.sin(time * 0.31 + index) * 1.5
             vertical = math.sin(index * 1.7) * 2.8
+            if self.portrait:
+                # A vertical constellation gives all five computed averages the
+                # same visual scale; placement does not encode their weight.
+                x_positions[index] = (-1.0 if index % 2 else 1.0) * 1.1
+                vertical = (2 - index) * depth * self.height * 0.145 / camera.focal
             world = (
                 camera.position
                 + forward * depth
@@ -2399,6 +2483,9 @@ class LatentFlightRenderer:
             )
 
     def _draw_conclusion_overlay(self, image: Image.Image, local: float, time: float) -> None:
+        if self.portrait:
+            self._draw_conclusion_portrait(image, local)
+            return
         layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(layer, "RGBA")
         margin = max(22, self.width // 25)
@@ -2453,6 +2540,41 @@ class LatentFlightRenderer:
                 )
         image.paste(layer, (0, 0), layer)
 
+    def _draw_conclusion_portrait(self, image: Image.Image, local: float) -> None:
+        layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(layer, "RGBA")
+        w, h = self.width, self.height
+        margin = int(w * 0.075)
+        alpha = int(255 * min(1.0, local / 0.10) * min(1.0, (1.0 - local) / 0.045))
+        heading = "OUTPUT ARRAY / SAME CORPUS / FIVE WEIGHTINGS"
+        heading_font = self._fit_font(draw, heading, w - margin * 2, max(19, w // 48), 14)
+        draw.text((margin, h * 0.055), heading, font=heading_font, fill=(222, 242, 245, alpha))
+        label_font = load_font(max(17, w // 52), mono=True)
+        labels_alpha = int(alpha * (1.0 - min(1.0, max(0.0, (local - 0.52) / 0.16))))
+        for index, intent in enumerate(INTENTS):
+            stats = self.assets.findings["weightings"][intent]
+            top = stats["top_five"][0]
+            label = f"{index + 1:02d}  {INTENT_LABELS[intent].upper()}\n     {top['name'].upper()} {top['share'] * 100:05.2f}%"
+            y = h * (0.19 + index * 0.145) + h * 0.046
+            draw.multiline_text((margin, y), label, font=label_font, fill=(170, 220, 230, labels_alpha), spacing=3)
+        if local > 0.52:
+            verdict = min(1.0, (local - 0.52) / 0.16)
+            draw.rectangle((0, h * 0.35, w, h * 0.67), fill=(0, 2, 6, int(208 * verdict)))
+            statement = "THE AVERAGE IS\nNOT FOUND.\nIT IS ENFORCED."
+            font = self._fit_font(draw, "THE AVERAGE IS", w - margin * 2, max(47, w // 20), 30)
+            bbox = draw.multiline_textbbox((0, 0), statement, font=font, spacing=8, align="center")
+            text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+            x, y = (w - text_w) / 2, h * 0.5 - text_h / 2
+            draw.multiline_text((x + 3, y), statement, font=font, fill=(255, 35, 88, int(110 * verdict)), spacing=8, align="center")
+            draw.multiline_text((x - 3, y), statement, font=font, fill=(35, 224, 255, int(110 * verdict)), spacing=8, align="center")
+            draw.multiline_text((x, y), statement, font=font, fill=(246, 249, 249, int(255 * verdict)), spacing=8, align="center")
+            if local > 0.72:
+                sub_alpha = int(230 * min(1.0, (local - 0.72) / 0.12))
+                proposition = "THE SYSTEM CAN EXECUTE THE CHOICE.\nIT CANNOT JUSTIFY IT."
+                sub_font = self._fit_font(draw, "THE SYSTEM CAN EXECUTE THE CHOICE.", w - margin * 2, max(23, w // 40), 17)
+                draw.multiline_text((w / 2, h * 0.71), proposition, font=sub_font, fill=(126, 214, 228, sub_alpha), anchor="ma", align="center", spacing=5)
+        image.paste(layer, (0, 0), layer)
+
     def _draw_interface(
         self,
         image: Image.Image,
@@ -2460,6 +2582,9 @@ class LatentFlightRenderer:
         time: float,
         frame_index: int,
     ) -> None:
+        if self.portrait:
+            self._draw_interface_portrait(image, camera, time, frame_index)
+            return
         chapter_index, chapter, local = self._chapter(time)
         headline, subtitle, lines, accent = self._chapter_content(chapter, local, time)
         layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
@@ -2621,6 +2746,75 @@ class LatentFlightRenderer:
         draw.line((cx + gap, cy, cx + reach, cy), fill=(*accent, 115), width=1)
         draw.line((cx, cy - reach, cx, cy - gap), fill=(*accent, 115), width=1)
         draw.line((cx, cy + gap, cx, cy + reach), fill=(*accent, 115), width=1)
+        image.paste(layer, (0, 0), layer)
+        self._draw_process_peek(image, chapter, local, time)
+
+    def _draw_interface_portrait(
+        self, image: Image.Image, camera: Camera, time: float, frame_index: int
+    ) -> None:
+        chapter_index, chapter, local = self._chapter(time)
+        headline, subtitle, lines, accent = self._chapter_content(chapter, local, time)
+        layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(layer, "RGBA")
+        w, h = self.width, self.height
+        margin = int(w * 0.065)
+        inner = w - 2 * margin - 34
+        panel_x, panel_y = margin, int(h * 0.045)
+        header = f"SEARCH / {chapter_index + 1:02d}.{len(self.chapters):02d} / {CHAPTER_LABELS[chapter]}"
+        header_font = self._fit_font(draw, header, inner, max(18, w // 48), 12)
+        heading_font = load_font(max(26, w // 35), mono=True)
+        body_font = load_font(max(20, w // 48), mono=True)
+        head_lines = self._wrap_lines(draw, subtitle, heading_font, inner)
+        body_lines = [wrapped for line in lines for wrapped in self._wrap_lines(draw, line, body_font, inner)]
+        head_step = max(37, h // 51)
+        body_step = max(28, h // 70)
+        panel_h = 50 + len(head_lines) * head_step + 18 + len(body_lines) * body_step + 25
+        draw.rectangle((panel_x - 10, panel_y - 8, w - margin, panel_y + panel_h), fill=(0, 3, 8, 168), outline=(*accent, 90))
+        draw.rectangle((panel_x - 10, panel_y - 8, panel_x - 4, panel_y + panel_h), fill=(*accent, 215))
+        draw.text((panel_x + 8, panel_y + 7), header, font=header_font, fill=(*accent, 245))
+        y = panel_y + 50
+        for line in head_lines:
+            draw.text((panel_x + 8, y), line, font=heading_font, fill=(242, 248, 250, 245))
+            y += head_step
+        y += 18
+        for line in body_lines:
+            draw.text((panel_x + 8, y), line, font=body_font, fill=(191, 220, 225, 230))
+            y += body_step
+
+        progress = self._search_progress(time)
+        previous_time = max(0.0, time - 1.0 / max(1, self.config.fps))
+        previous_camera = self._camera(previous_time)[0]
+        speed = max(0.0, camera.position[2] - previous_camera.position[2]) * self.config.fps
+        state = (
+            "TNA / LATENT-WORLD SEARCH\n"
+            f"NAV Z {camera.position[2]:+08.2f}  FORWARD {speed:04.2f}u/s\n"
+            f"FRAME {frame_index:06d}  SEARCH {progress * 100:06.2f}%\n"
+            "ANALYTICS TRACE-LOCKED / CAMERA ARTISTIC"
+        )
+        state_font = load_font(max(17, w // 56), mono=True)
+        draw.multiline_text((panel_x, panel_y + panel_h + 24), state, font=state_font, fill=(164, 218, 229, 215), spacing=6)
+
+        command_alpha = int(255 * max(0.0, 1.0 - local / 0.23))
+        if command_alpha > 4:
+            command_font = self._fit_font(draw, headline, w - margin * 2, max(36, w // 25), 20)
+            command_y = h * 0.48
+            draw.rectangle((margin - 12, command_y - 12, w - margin + 12, command_y + 70), fill=(0, 3, 8, int(command_alpha * 0.55)))
+            draw.text((margin, command_y), headline, font=command_font, fill=(246, 249, 247, command_alpha))
+
+        # The nine-stage route remains sequential, now in a vertical rail.
+        rail_x = w - margin - 13
+        rail_top, rail_bottom = int(h * 0.48), int(h * 0.87)
+        draw.line((rail_x, rail_top, rail_x, rail_bottom), fill=(83, 171, 187, 160), width=max(1, w // 550))
+        route_font = load_font(max(17, w // 60), mono=True)
+        for index, (key, _, _) in enumerate(self.chapters):
+            y = rail_top + (rail_bottom - rail_top) * index / max(1, len(self.chapters) - 1)
+            active = index == chapter_index
+            colour = (*accent, 255) if active else (115, 174, 186, 175)
+            radius = 5 if active else 3
+            draw.rectangle((rail_x - radius, y - radius, rail_x + radius, y + radius), fill=colour)
+            draw.text((rail_x - 18, y - 9), f"{index + 1:02d} {ROUTE_LABELS[key]}", font=route_font, fill=colour, anchor="ra")
+        scan_y = int((time * 83.0) % h)
+        draw.line((margin, scan_y, w - margin, scan_y), fill=(*accent, 24))
         image.paste(layer, (0, 0), layer)
         self._draw_process_peek(image, chapter, local, time)
 

@@ -50,3 +50,34 @@ python scripts/render_latent_flight.py \
 VS Code exposes equivalent `TNA: Render Latent World ...` tasks.
 
 The renderer writes source artefacts, stills, technical notes and a provenance manifest that distinguishes computed geometry from visual treatment.
+
+## WE THE ARTISTS portrait edition
+
+`presets/we-the-artists-portrait-2026.json` defines a separate 1080 × 1920,
+24 fps, 96-second edition with the same seed, soundtrack, foundation models,
+computed findings and source corpus as the landscape production edition.
+The portrait renderer uses a taller camera projection, portrait opening and
+annotation layout, a vertical nine-stage route, and a vertical constellation
+of the five weighted averages. The original landscape preset and output remain
+the source edition and are not overwritten.
+
+Sample the complete narrative timeline at preview resolution before production:
+
+```bash
+PYTHONPATH=src HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  python scripts/diagnose_portrait.py
+```
+
+Render the portrait master into its own ignored output directory:
+
+```bash
+PYTHONPATH=src HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  python scripts/render_latent_flight.py \
+  --preset production \
+  --preset-file presets/we-the-artists-portrait-2026.json \
+  --out-dir outputs/video/we-the-artists-portrait-master
+```
+
+The production render requires cached CLIP and SD-VAE models. The diagnostic
+script verifies them from the local cache and writes sampled frames and full
+analytical provenance to `outputs/video/we-the-artists-portrait-diagnostic/`.
